@@ -4,10 +4,15 @@ import (
 //    "github.com/gorilla/rpc/json"
 //    "net/http"
 //    "fmt"
+
     "log"
     "net"
     "net/rpc"
     "net/rpc/jsonrpc"
+
+    "github.com/hefju/MyRpcServer/setting"
+    "github.com/hefju/MyRpcServer/library"
+    "fmt"
 )
 
 type Args struct{
@@ -25,6 +30,16 @@ func (h *Hello)Say(args *Args, reply *Reply)error{
 
 func main(){
 
+   w:= new(library.Watcher)
+  var  result int
+    w.GetInfo(500,&result)
+   fmt.Println("result",result)
+
+   st:= new(setting.App)
+    st.  Ip="192.168"
+    st. Port="8000"
+st.SaveToFile()
+
     hello:=new(Hello)
     s:=rpc.NewServer()
     s.Register(hello)
@@ -41,6 +56,9 @@ func main(){
             go s.ServeCodec(jsonrpc.NewServerCodec(conn))
         }
     }
+
+
+
 //    s:=rpc.NewServer()
 //    s.RegisterCodec(json.NewCodec(),"application/json")
 //    s.RegisterService(new(Hello),"")
